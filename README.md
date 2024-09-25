@@ -20,11 +20,11 @@ SQL queries here: [project_sql folder](/project_sql/)
 
 # The Analysis
 
-Each query builds off one another, ultimately to find insights related to Data Analyst jobs for optimal employment (high demand skills~high compensation)
+Each query builds off one another, ultimately to find insights related to Data Analyst jobs for optimal employment (high demand skills,high compensation)
 
-### Query 1: Top Paying Data Anaylst Jobs
+### Query 1: Top Paying Data Anaylst Jobs (Remote)
 
-The first query explores Data Analyst jobs specifically and the top salaries for said jobs, by company. 
+The first query explores Data Analyst jobs specifically and the top salaries for said jobs, by company that are remote. 
 
 
 
@@ -56,6 +56,140 @@ LIMIT 10;
 - **Affiliated companies of these roles:** Manty's, Meta and AT&T were the companies paying out the most for a Data Analyst specific role
 
 
+### Query 2: Skills Affiliated with Top Paying Jobs
+
+The second query builds off the first, exploring what skills solicit the results of the top paying jobs in the Query 1.
+
+
+
+
+```sql
+WITH top_paying_jobs AS(
+    SELECT
+        job_id,
+        job_title,
+        salary_year_avg,
+        name AS company_name
+    FROM
+        job_postings_fact
+    LEFT JOIN company_dim ON job_postings_fact.company_id = company_dim.company_id
+    WHERE
+        job_title_short = 'Data Analyst' AND
+        job_location = 'Anywhere' AND
+        salary_year_avg IS NOT NULL
+    ORDER BY
+        salary_year_avg DESC
+LIMIT 10
+)
+
+SELECT
+    top_paying_jobs.*,
+    skills
+FROM top_paying_jobs
+INNER JOIN skills_job_dim ON top_paying_jobs.job_id = skills_job_dim.job_id
+INNER JOIN skills_dim ON skills_job_dim.skill_id = skills_dim.skill_id
+ORDER BY
+    salary_year_avg DESC;
+```
+**Quick insights:**
+
+### Query 3: Most-demanded Skills for Data Analyst
+
+The third query is similar to the second one, with a focus on top skills in demand for Data Analysts in general.
+
+
+```sql
+SELECT 
+    skills,
+    COUNT(skills_job_dim.job_id) AS demand_count
+FROM job_postings_fact
+INNER JOIN skills_job_dim ON job_postings_fact.job_id = skills_job_dim.job_id
+INNER JOIN skills_dim ON skills_job_dim.skill_id = skills_dim.skill_id
+WHERE 
+    job_title = 'Data Analyst'
+GROUP BY
+    skills
+ORDER BY 
+    demand_count DESC
+LIMIT 5;
+```
+**Quick insights:**
+
+### Query 4: Top Skills based on Salary 
+
+Query Four is centered around the top skills based for Data Analysts, not specific to remote offerings.
+
+```sql
+SELECT 
+    skills,
+    ROUND(AVG(salary_year_avg), 0) AS avg_salary
+FROM job_postings_fact
+INNER JOIN skills_job_dim ON job_postings_fact.job_id = skills_job_dim.job_id
+INNER JOIN skills_dim ON skills_job_dim.skill_id = skills_dim.skill_id
+WHERE 
+    job_title = 'Data Analyst' AND
+    salary_year_avg IS NOT NULL
+GROUP BY
+    skills
+ORDER BY 
+    avg_salary DESC
+LIMIT 25;
+```
+**Quick insights:**
+
+
+
+### Query 5: The most optimal skills to learn (High demand and Pay)
+
+The fifth query investigates the best skills to learn based on demand and pay.
+
+```sql
+WITH skills_demand AS (
+    SELECT
+        skills_dim.skill_id,
+        skills_dim.skills,
+        COUNT(skills_job_dim.job_id) AS demand_count
+    FROM job_postings_fact
+    INNER JOIN skills_job_dim ON job_postings_fact.job_id = skills_job_dim.job_id
+    INNER JOIN skills_dim ON skills_job_dim.skill_id = skills_dim.skill_id
+    WHERE 
+        job_title_short = 'Data Analyst' 
+        AND salary_year_avg IS NOT NULL
+        AND job_work_from_home = True
+    GROUP BY
+        skills_dim.skill_id
+), average_salary AS (
+    SELECT
+        skills_job_dim.skill_id,
+        ROUND(AVG(salary_year_avg), 0) AS avg_salary
+    FROM job_postings_fact
+    INNER JOIN skills_job_dim ON job_postings_fact.job_id = skills_job_dim.job_id
+    INNER JOIN skills_dim ON skills_job_dim.skill_id = skills_dim.skill_id
+    WHERE 
+        job_title_short = 'Data Analyst' 
+        AND salary_year_avg IS NOT NULL 
+        AND job_work_from_home = True
+    GROUP BY
+        skills_job_dim.skill_id
+)
+
+SELECT 
+    skills_demand.skill_id,
+    skills_demand.skills,
+    demand_count,
+    avg_salary
+FROM
+    skills_demand
+INNER JOIN average_salary ON skills_demand.skill_id = average_salary.skill_id
+WHERE
+    demand_count>10
+ORDER BY
+    avg_salary DESC,
+    demand_count DESC
+LIMIT 25;
+```
+
+**Quick insights:**
 
 # What I learned
 
