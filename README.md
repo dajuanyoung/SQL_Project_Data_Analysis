@@ -24,7 +24,7 @@ Each query builds off one another, ultimately to find insights related to Data A
 
 ### Query 1: Top Paying Data Anaylst Jobs (Remote)
 
-The first query explores Data Analyst jobs specifically and the top salaries for said jobs, by company that are remote. 
+The first query explores Data Analyst jobs specifically and the top salaries for said jobs, by company, that are remote. 
 
 
 
@@ -58,7 +58,7 @@ LIMIT 10;
 
 ### Query 2: Skills Affiliated with Top Paying Jobs
 
-The second query builds off the first, exploring what skills solicit the results of the top paying jobs in the Query 1.
+The second query builds off the first, exploring what skills solicit the results of the top paying jobs in the first query.
 
 
 
@@ -91,7 +91,9 @@ INNER JOIN skills_dim ON skills_job_dim.skill_id = skills_dim.skill_id
 ORDER BY
     salary_year_avg DESC;
 ```
-**Quick insights:**
+**Quick insight:**
+
+
 
 ### Query 3: Most-demanded Skills for Data Analyst
 
@@ -113,7 +115,7 @@ ORDER BY
     demand_count DESC
 LIMIT 5;
 ```
-**Quick insights:**
+**Quick insight:**
 
 ### Query 4: Top Skills based on Salary 
 
@@ -135,7 +137,7 @@ ORDER BY
     avg_salary DESC
 LIMIT 25;
 ```
-**Quick insights:**
+**Quick insight:**
 
 
 
@@ -189,7 +191,7 @@ ORDER BY
 LIMIT 25;
 ```
 
-**Quick insights:**
+**Quick insight:**
 
 # What I learned
 
