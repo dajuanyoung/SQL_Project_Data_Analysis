@@ -92,7 +92,7 @@ ORDER BY
     salary_year_avg DESC;
 ```
 **Quick insight:**
-
+The top paying skills for Data Analyst's in remote locations was: SQL, python, r, databricks and azure among others.
 
 
 ### Query 3: Most-demanded Skills for Data Analyst
@@ -116,6 +116,7 @@ ORDER BY
 LIMIT 5;
 ```
 **Quick insight:**
+The most in-demand skills, according to the number of job postings that listed them for Data Analysts were: SQL, Excel, Python, Tableau and Power BI
 
 ### Query 4: Top Skills based on Salary 
 
@@ -138,7 +139,7 @@ ORDER BY
 LIMIT 25;
 ```
 **Quick insight:**
-
+The top skills based on average salary for Data Analysts, both remote and non-remote were more niche skills such as: Golang, Redis and Pytorch
 
 
 ### Query 5: The most optimal skills to learn (High demand and Pay)
@@ -192,6 +193,8 @@ LIMIT 25;
 ```
 
 **Quick insight:**
+The most optimal skills to learn based on demand and salary were: Go, Confluence, Hadoop, Snowflake and Azure
+
 
 # What I learned
 
